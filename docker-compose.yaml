@@ -1,9 +1,9 @@
 version: '3'
 services:
   #MySQL Service
-  demo_db:
+  vuttr_db:
     image: mysql:5.7
-    container_name: demo_db
+    container_name: vuttr_db
     restart: unless-stopped
     tty: true
     ports:
@@ -12,36 +12,25 @@ services:
       - .env
     environment:
       MYSQL_DATABASE: app_database
-      MYSQL_ROOT_PASSWORD: strong_root_password  #replace this with a strong password
+      MYSQL_ROOT_PASSWORD: strong_root_password
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql/
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
-      - ./.env:/var/www/.env
     networks:
       - app-network
   #PHP Service
-  demo_app:
+  vuttr_app:
     build:
       context: .
       dockerfile: Dockerfile
     image: digitalocean.com/php
-    container_name: demo_app
+    container_name: vuttr_app
     restart: unless-stopped
     tty: true
     env_file:
       - .env
-  #  env_file: '.env'
-    # environment:
-    #   SERVICE_NAME: demo_app
-    #   SERVICE_TAGS: dev
-    #   MYSQL_CONNECTION: mysql
-    #   MYSQL_HOST: demo_db
-    #   MYSQL_PORT: 3306
-    #   MYSQL_DATABASE: app_database
-    #   MYSQL_USERNAME: root
-    #   MYSQL_PASSWORD: strong_root_password
     working_dir: /var/www
     volumes:
       - ./:/var/www
@@ -51,28 +40,21 @@ services:
       - app-network
 
   #Nginx Service
-  demo_webserver:
+  vuttr_webserver:
     image: nginx:alpine
-    container_name: demo_webserver
+    container_name: vuttr_webserver
     restart: unless-stopped
     tty: true
     ports:
-      - "8123:80"
-#      - "443:443"
+      - "3000:80"
     volumes:
       - ./:/var/www
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-      - ./.env:/var/www/.env
     networks:
       - app-network
-
-
-
-#Docker Networks
 networks:
   app-network:
     driver: bridge
-#Volumes
 volumes:
   dbdata:
     driver: local
