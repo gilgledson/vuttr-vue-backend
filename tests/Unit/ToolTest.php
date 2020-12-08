@@ -16,7 +16,7 @@ class ToolTest extends TestCase
      */
     public function testCrudTool()
     {
-        $create = $this->postJson('/api/tool', [
+        $create = $this->postJson('/api/v1/tool', [
             'name' => 'teste 1',
             'link' => 'https://google.com',
             "tags" => ["node", "php", "vuejs"]
@@ -25,14 +25,14 @@ class ToolTest extends TestCase
         $create->assertStatus(201);
         $tool = $create->decodeResponseJson();
 
-        $getAll = $this->get('/api/tool');
+        $getAll = $this->get('/api/v1/tool');
 
         $getAll->assertStatus(200);
 
 
         $delete = $this->withHeaders([
             'Content-Type' => 'application/json',
-        ])->json('DELETE', '/api/tool/'.$tool['id']);
+        ])->json('DELETE', '/api/v1/tool/'.$tool['id']);
 
         $delete->assertStatus(200);
     }
