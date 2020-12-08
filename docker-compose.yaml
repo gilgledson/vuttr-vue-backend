@@ -12,13 +12,12 @@ services:
       - .env
     environment:
       MYSQL_DATABASE: app_database
-      MYSQL_ROOT_PASSWORD: strong_root_password  #replace this with a strong password
+      MYSQL_ROOT_PASSWORD: strong_root_password
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql/
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
-      - ./.env:/var/www/.env
     networks:
       - app-network
   #PHP Service
@@ -48,21 +47,14 @@ services:
     tty: true
     ports:
       - "3000:80"
-#      - "443:443"
     volumes:
       - ./:/var/www
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-      - ./.env:/var/www/.env
     networks:
       - app-network
-
-
-
-#Docker Networks
 networks:
   app-network:
     driver: bridge
-#Volumes
 volumes:
   dbdata:
     driver: local
